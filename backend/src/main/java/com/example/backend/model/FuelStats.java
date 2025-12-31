@@ -1,9 +1,9 @@
 package com.example.backend.model;
 
 public class FuelStats {
-    private double totalFuel;
-    private double totalCost;
-    private double averageConsumption;
+    private final double totalFuel;
+    private final double totalCost;
+    private final double averageConsumption;
 
     public FuelStats(double totalFuel, double totalCost, double averageConsumption) {
         this.totalFuel = totalFuel;

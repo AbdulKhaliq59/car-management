@@ -2,9 +2,9 @@ package com.example.backend.model;
 
 
 public class FuelEntry {
-    private double liters;
-    private double price;
-    private int odometer;
+    private final double liters;
+    private final double price;
+    private final int odometer;
 
     public FuelEntry(double liters, double price, int odometer) {
         this.liters = liters;
