@@ -14,10 +14,11 @@ import java.io.IOException;
 public class FuelStatsServlet extends HttpServlet {
 
     private final CarService carService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
-    public FuelStatsServlet(CarService carService) {
+    public FuelStatsServlet(CarService carService, ObjectMapper objectMapper) {
         this.carService = carService;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class FuelStatsServlet extends HttpServlet {
         // 1️⃣ Manual query param validation
         if (carIdParam == null) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("{\"error\":\"Missing carId parameter\"}");
+            resp.getWriter().write(objectMapper.writeValueAsString(java.util.Collections.singletonMap("error", "Missing carId parameter")));
             return;
         }
 
@@ -45,11 +46,11 @@ public class FuelStatsServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            resp.getWriter().write("{\"error\":\"Invalid carId format\"}");
+            resp.getWriter().write(objectMapper.writeValueAsString(java.util.Collections.singletonMap("error", "Invalid carId format")));
 
         } catch (CarNotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            resp.getWriter().write("{\"error\":\"" + e.getMessage() + "\"}");
+            resp.getWriter().write(objectMapper.writeValueAsString(java.util.Collections.singletonMap("error", e.getMessage())));
         }
     }
 }

@@ -7,12 +7,13 @@ import com.example.backend.model.FuelStats;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class CarService {
 
-    private final Map<Long, Car> cars = new HashMap<>();
+    private final Map<Long, Car> cars = new ConcurrentHashMap<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
 
     public Car createCar(String brand, String model, int year) {
@@ -33,7 +34,8 @@ public class CarService {
 
     public FuelStats getFuelStats(Long carId) {
         Car car = getCarById(carId);
-        List<FuelEntry> entries = car.getFuelEntries();
+        List<FuelEntry> entries = new ArrayList<>(car.getFuelEntries());
+        entries.sort(Comparator.comparingInt(FuelEntry::getOdometer));
 
         if (entries.isEmpty()) {
             return new FuelStats(0, 0, 0);
@@ -44,12 +46,15 @@ public class CarService {
                 .sum();
 
         double totalCost = entries.stream()
-                .mapToDouble(FuelEntry::getPrice)
+                .mapToDouble(entry -> entry.getLiters() * entry.getPrice())
                 .sum();
 
         int firstOdometer = entries.get(0).getOdometer();
         int lastOdometer = entries.get(entries.size() - 1).getOdometer();
         int distance = lastOdometer - firstOdometer;
+        if (distance < 0) {
+            throw new IllegalStateException("Odometer readings are inconsistent, resulting in negative distance.");
+        }
 
         double avgConsumption = distance > 0
                 ? (totalFuel / distance) * 100

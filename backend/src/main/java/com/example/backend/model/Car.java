@@ -1,15 +1,15 @@
 package com.example.backend.model;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Car {
 
-    private Long id;
-    private String brand;
-    private String model;
-    private int year;
-    private List<FuelEntry> fuelEntries = new ArrayList<>();
+    private final Long id;
+    private final String brand;
+    private final String model;
+    private final int year;
+    private final List<FuelEntry> fuelEntries = new CopyOnWriteArrayList<>();
 
     public Car(Long id, String brand, String model, int year) {
         this.id = id;
