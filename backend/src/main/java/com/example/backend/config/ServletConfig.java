@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 public class ServletConfig {
 
     @Bean
-    public ServletRegistrationBean<FuelStatsServlet> fuelStatsServlet(CarService carService) {
+    public ServletRegistrationBean<FuelStatsServlet> fuelStatsServlet(CarService carService, com.fasterxml.jackson.databind.ObjectMapper objectMapper) {
         return new ServletRegistrationBean<>(
-                new FuelStatsServlet(carService),
+                new FuelStatsServlet(carService, objectMapper),
                 "/servlet/fuel-stats"
         );
     }
