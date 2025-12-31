@@ -40,7 +40,12 @@ public class CliUtils {
         HttpResponse<String> response =
                 client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(response.body());
+        if (response.statusCode() == 201) {
+            System.out.println("Car created successfully:");
+            System.out.println(response.body());
+        } else {
+            System.err.println("Error creating car: " + response.body());
+        }
     }
 
     // Add Fuel Entry
@@ -94,6 +99,25 @@ public class CliUtils {
 
         System.out.println("Fuel statistics:");
         System.out.println(body);
+    }
+
+    // List Cars
+    public static void listCars(HttpClient client, String[] args) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/api/cars"))
+                .GET()
+                .build();
+
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.err.println("Error listing cars: " + response.body());
+            return;
+        }
+
+        System.out.println("Cars:");
+        System.out.println(response.body());
     }
 
     // args helper

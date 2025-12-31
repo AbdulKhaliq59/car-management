@@ -17,6 +17,7 @@ public class CarCliApplication {
                 case "create-car" -> CliUtils.createCar(client, args);
                 case "add-fuel" -> CliUtils.addFuel(client, args);
                 case "fuel-stats" -> CliUtils.getFuelStats(client, args);
+                case "list-cars" -> CliUtils.listCars(client, args);
                 default -> System.err.println("Unknown Command: " + command);
             }
         } catch (Exception e) {
